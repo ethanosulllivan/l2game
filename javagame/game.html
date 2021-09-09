@@ -22,7 +22,7 @@
 
         }
 
-        function playermove(){
+        function playerMove(){
         if(leftkeyPressed){
             pXpos -= pXspeed;
             if(pXpos == 0){
@@ -48,7 +48,7 @@
                 }
         }
     }
-
+        //player movement function
         function keyPressed(evt){
             if(evt.keyCode == LEFT_KEY){
                 leftkeyPressed = true;
@@ -67,7 +67,7 @@
             }
         }
 
-
+        //player movement function
         function keyReleased(evt){
             if(evt.keyCode == LEFT_KEY){
                 leftkeyPressed = false;
@@ -82,7 +82,7 @@
                 downkeyPressed = false;
             }
         }
-
+        //player movement var
         const LEFT_KEY = 65;
         const UP_KEY = 83;
         const RIGHT_KEY = 68;
@@ -91,26 +91,47 @@
         var rightkeyPressed = false;
         var upkeyPressed = false;
         var downkeyPressed = false;
-
+        
+        //player var
         var pXpos = 190;
         var pYpos = 190;
         var pXspeed = 5;
         var pYspeed = 5;
         const pSIZE = 20;
 
+        //enemy var
+        var eXpos = 290;
+        var eYpos = 90;
+        var eXspeed = 5;
+        var eYspeed = 5;
+        const eSIZE = 20;
 
+        //backfround var
         var bacGwidth = 400;
         var bacGheight = 400;
         var backG = new Image();
         backG.src = 'images/Cobble.jpg';
 
+        function enemyMove(){
+            eYpos += eYspeed;
+
+            if(eYpos == canvas.height - eSIZE){
+                 eYspeed *= -1;
+            }
+            if(eYpos < 0){
+                 eYspeed *= -1;
+            }
+        }
+
 
 
 function mainloop() {
     drawImgs(backG, 0, 0, bacGheight, bacGwidth,); 
-    colorRect(pXpos,pYpos,pSIZE,pSIZE,'red');
+    colorRect(pXpos,pYpos,pSIZE,pSIZE,'red'); 
+    colorRect(eXpos,eYpos,eSIZE,eSIZE,'blue');
 
-    playermove();
+    playerMove();
+    enemyMove();
 }
 
 function colorRect(x,y,w,h,c){
