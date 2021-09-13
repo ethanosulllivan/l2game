@@ -22,32 +22,60 @@
 
         }
 
-        function playerMove(){
-        if(leftkeyPressed){
-            pXpos -= pXspeed;
-            if(pXpos == 0){
-                 pXpos += pXspeed;
+        //player movement var
+        const LEFT_KEY = 65;
+        const UP_KEY = 83;
+        const RIGHT_KEY = 68;
+        const DOWN_KEY = 87;
+        var leftkeyPressed = false;
+        var rightkeyPressed = false;
+        var upkeyPressed = false;
+        var downkeyPressed = false;
+        
+        //player var
+        var pXpos = 190;
+        var pYpos = 190;
+        var pXspeed = 5;
+        var pYspeed = 5;
+        const pSIZE = 20;
+//        pImg.src = 'images/abomo.jpg';
+
+        //backfround var
+        var bacGwidth = 400;
+        var bacGheight = 400;
+        var backG = new Image();
+        backG.src = 'images/Cobble.jpg';
+    
+        //enemy var
+        
+        
+        var eXspeed = 5;
+        var eYspeed = 5;
+        
+    
+        var enemies = [];
+    
+        var totalEnemies = 15;
+        var starting = true;
+
+        function mainloop() {
+            drawImgs(backG, 0, 0, bacGheight, bacGwidth,); 
+            colorRect(pXpos,pYpos,pSIZE,pSIZE,'red'); 
+        //    colorRect(eXpos,eYpos,eSIZE,eSIZE,'blue');
+
+            if(starting){
+                for(var i = 0; i < totalEnemies; i++){
+                    makeEnemy();
                 }
+                starting = false;
+            }
+
+            playerMove();
+            drawEnemies();
+            moveEnemies();
+        //    enemyMove();
         }
-        if(rightkeyPressed){
-            pXpos += pXspeed;
-            if(pXpos == 380){
-                 pXpos -= pXspeed;
-                }
-        }
-        if(upkeyPressed){
-            pYpos += pYspeed;
-            if(pYpos == 380){
-                 pYpos -= pYspeed;
-                }
-        }
-        if(downkeyPressed){
-            pYpos -= pYspeed;
-            if(pYpos == 0){
-                 pYpos += pYspeed;
-                }
-        }
-    }
+    
         //player movement function
         function keyPressed(evt){
             if(evt.keyCode == LEFT_KEY){
@@ -82,35 +110,71 @@
                 downkeyPressed = false;
             }
         }
-        //player movement var
-        const LEFT_KEY = 65;
-        const UP_KEY = 83;
-        const RIGHT_KEY = 68;
-        const DOWN_KEY = 87;
-        var leftkeyPressed = false;
-        var rightkeyPressed = false;
-        var upkeyPressed = false;
-        var downkeyPressed = false;
-        
-        //player var
-        var pXpos = 190;
-        var pYpos = 190;
-        var pXspeed = 5;
-        var pYspeed = 5;
-        const pSIZE = 20;
+    
+        function playerMove(){
+        if(leftkeyPressed){
+            pXpos -= pXspeed;
+            if(pXpos == 0){
+                 pXpos += pXspeed;
+                }
+        }
+        if(rightkeyPressed){
+            pXpos += pXspeed;
+            if(pXpos == 380){
+                 pXpos -= pXspeed;
+                }
+        }
+        if(upkeyPressed){
+            pYpos += pYspeed;
+            if(pYpos == 380){
+                 pYpos -= pYspeed;
+                }
+        }
+        if(downkeyPressed){
+            pYpos -= pYspeed;
+            if(pYpos == 0){
+                 pYpos += pYspeed;
+                }
+        }
+    }
+    
+        function makeEnemy(){
+            const eSIZE = 20;
+            var eXpos = Math.floor(Math.random()*(canvas.width - eSIZE));
+            var eYpos = Math.floor(Math.random()*(canvas.height - eSIZE));
+            var eXspeed = 5;
+            var eYspeed = 5;
+            
+            var e = {
+                eXpos: eXpos,
+                eYpos: eYpos,
+                eSIZE: eSIZE,
+                eXspeed: eXspeed,
+                eYspeed: eYspeed
+            }
+            
+            enemies.push(e);
+        }
+    
+    function drawEnemies(){
+        enemies.forEach(function(e,i,array){
+            colorRect(e.eXpos,e.eYpos,e.eSIZE,e.eSIZE,'blue');
+        });
+    }
+    
+    function moveEnemies(){
+        enemies.forEach(function(e,i,array){
+            e.eXpos += e.eXspeed;
+            
+            if(e.eXpos + e.eSIZE > canvas.width){
+               e.eXspeed *= -1;
+            }
+            if(e.eXpos < 0){
+               e.eXspeed *= -1;
+            }
+        });
+    }
 
-        //enemy var
-        var eXpos = 290;
-        var eYpos = 90;
-        var eXspeed = 5;
-        var eYspeed = 5;
-        const eSIZE = 20;
-
-        //backfround var
-        var bacGwidth = 400;
-        var bacGheight = 400;
-        var backG = new Image();
-        backG.src = 'images/Cobble.jpg';
 
         function enemyMove(){
             eYpos += eYspeed;
@@ -124,15 +188,6 @@
         }
 
 
-
-function mainloop() {
-    drawImgs(backG, 0, 0, bacGheight, bacGwidth,); 
-    colorRect(pXpos,pYpos,pSIZE,pSIZE,'red'); 
-    colorRect(eXpos,eYpos,eSIZE,eSIZE,'blue');
-
-    playerMove();
-    enemyMove();
-}
 
 function colorRect(x,y,w,h,c){
             canvasContext.fillStyle = c;
