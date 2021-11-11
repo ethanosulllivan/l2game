@@ -21,8 +21,101 @@
 
 
         }
+        
+        var tXpos = 0;
+        var tYpos = 0;
+        const tSIZE = 20;
+        
+        
+        //player movement var
+        const LEFT_KEY = 65;
+        const UP_KEY = 83;
+        const RIGHT_KEY = 68;
+        const DOWN_KEY = 87;
+        var leftkeyPressed = false;
+        var rightkeyPressed = false;
+        var upkeyPressed = false;
+        var downkeyPressed = false;
+        
+        //player var
+        var pXpos = 190;
+        var pYpos = 190;
+        var pXspeed = 5;
+        var pYspeed = 5;
+        const pSIZE = 20;
+//        pImg.src = 'images/abomo.jpg';
 
-        function playermove(){
+        //backfround var
+        var bacGwidth = 400;
+        var bacGheight = 400;
+        var backG = new Image();
+        backG.src = 'images/Cobble.jpg';
+    
+        //enemy var
+        
+        
+        var eXspeed = 2;
+        var eYspeed = 2;
+        
+    
+        var enemies = [];
+    
+        var totalEnemies = 10;
+        var starting = true;
+
+        function mainloop() {
+            drawImgs(backG, 0, 0, bacGheight, bacGwidth,); 
+            colorRect(pXpos,pYpos,pSIZE,pSIZE,'red'); 
+            colorRect(tXpos,tYpos,tSIZE,tSIZE,'yellow');
+
+            if(starting){
+                for(var i = 0; i < totalEnemies; i++){
+                    makeEnemy();
+                }
+                starting = false;
+            }
+
+            playerMove();
+            drawEnemies();
+            moveEnemies();
+        }
+    
+        //player movement function
+        function keyPressed(evt){
+            if(evt.keyCode == LEFT_KEY){
+                leftkeyPressed = true;
+            }
+            if(evt.keyCode == RIGHT_KEY){
+                rightkeyPressed = true;
+
+            }
+            if(evt.keyCode == UP_KEY){
+                upkeyPressed = true;
+
+            }
+            if(evt.keyCode == DOWN_KEY){
+                downkeyPressed = true;
+
+            }
+        }
+
+        //player movement function
+        function keyReleased(evt){
+            if(evt.keyCode == LEFT_KEY){
+                leftkeyPressed = false;
+            }
+            if(evt.keyCode == RIGHT_KEY){
+                rightkeyPressed = false;
+            }
+            if(evt.keyCode == UP_KEY){
+                upkeyPressed = false;
+            }
+            if(evt.keyCode == DOWN_KEY){
+                downkeyPressed = false;
+            }
+        }
+    
+        function playerMove(){
         if(leftkeyPressed){
             pXpos -= pXspeed;
             if(pXpos == 0){
@@ -48,69 +141,86 @@
                 }
         }
     }
-
-        function keyPressed(evt){
-            if(evt.keyCode == LEFT_KEY){
-                leftkeyPressed = true;
-            }
-            if(evt.keyCode == RIGHT_KEY){
-                rightkeyPressed = true;
-
-            }
-            if(evt.keyCode == UP_KEY){
-                upkeyPressed = true;
-
-            }
-            if(evt.keyCode == DOWN_KEY){
-                downkeyPressed = true;
-
-            }
+    
+        function makeTreasure(){
+            var tXpos = Math.floor(Math.random()*(canvas.width - tSIZE));
+            var tYpos = Math.floor(Math.random()*(canvas.height - tSIZE));
+            
+           var t = { 
+                tXpos: tXpos, 
+                tYpos: tYpos,
+                tSIZE: tSIZE
         }
-
-
-        function keyReleased(evt){
-            if(evt.keyCode == LEFT_KEY){
-                leftkeyPressed = false;
+    }
+    
+        function makeEnemy(){
+            const eSIZE = 20;
+            var eXpos = Math.floor(Math.random()*(canvas.width - eSIZE));
+            var eYpos = Math.floor(Math.random()*(canvas.height - eSIZE));
+            var eXspeed = 2;
+            var eYspeed = 2;
+            
+            var e = {
+                eXpos: eXpos,
+                eYpos: eYpos,
+                eSIZE: eSIZE,
+                eXspeed: eXspeed,
+                eYspeed: eYspeed
             }
-            if(evt.keyCode == RIGHT_KEY){
-                rightkeyPressed = false;
-            }
-            if(evt.keyCode == UP_KEY){
-                upkeyPressed = false;
-            }
-            if(evt.keyCode == DOWN_KEY){
-                downkeyPressed = false;
-            }
+            
+            enemies.push(e);
         }
+    
+    function drawEnemies(){
+        enemies.forEach(function(e,i,array){
+            colorRect(e.eXpos,e.eYpos,e.eSIZE,e.eSIZE,'blue');
+        });
+        
+    }
+    
+    function moveEnemies(){
+        enemies.forEach(function(e,i,array){
+        
+            if(pXpos > e.eXpos){
+                e.eXpos += e.eXspeed;
+            }
+            
+            if(pXpos < e.eXpos){
+                e.eXpos -= e.eXspeed;
+            }
+            
+           if(pYpos > e.eYpos){
+               e.eYpos += e.eXspeed;
+           }
+            
+            if(pYpos < e.eYpos){
+                e.eYpos -= e.eYspeed;
+            }
+            
+            
+            
+            if(e.eYpos + e.eSIZE > pYpos && e.eYpos < pYpos + pSIZE && e.eXpos + e.eSIZE > pXpos && e.eXpos < pXpos + pSIZE){
+                pXpos = canvas.width / 2;
+                pYpos = canvas.width / 2;
+                console.log('deaded');
+            }
+        });
+        
+       
+        
+    }
 
-        const LEFT_KEY = 65;
-        const UP_KEY = 83;
-        const RIGHT_KEY = 68;
-        const DOWN_KEY = 87;
-        var leftkeyPressed = false;
-        var rightkeyPressed = false;
-        var upkeyPressed = false;
-        var downkeyPressed = false;
 
-        var pXpos = 0;
-        var pYpos = 0;
-        var pXspeed = 5;
-        var pYspeed = 5;
-        const pSIZE = 20;
-
-
-function mainloop() {
-
-    colorRect(0,0,canvas.width, canvas.height, 'black');
-    colorRect(pXpos,pYpos,pSIZE,pSIZE,'red');
-
-    playermove();
-}
 
 function colorRect(x,y,w,h,c){
             canvasContext.fillStyle = c;
             canvasContext.fillRect(x,y,w,h);
         }
+
+function drawImgs(src, x, y, w, h){
+    canvasContext.drawImage(src, x, y, w, h);
+
+}
 
 
 </script>
